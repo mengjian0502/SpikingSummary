@@ -4,7 +4,7 @@ Get model details
 
 import torch
 import torch.nn as nn
-from models import CIFARNet, VGG7, resnet19, PLIFNet, BPSANet, SEWResNet, vgg11_lif, TETNet
+from models import CIFARNet, VGG7, resnet19, PLIFNet, BPSANet, SEWResNet, vgg11_lif, TETNet, resnet18
 
 activation = {}
 def get_activation(name):
@@ -13,7 +13,7 @@ def get_activation(name):
     return hook
 
 def main():
-    x = torch.randn(1, 3, 128, 128)
+    x = torch.randn(1, 3, 48, 48)
     num_classes = 10
     precision=32
     wbit = 32
@@ -23,14 +23,15 @@ def main():
     # model = PLIFNet()
     # model = SEWResNet(connect_f='ADD')
     # model = TETNet(None)
-    model = BPSANet(num_classes=num_classes)
+    # model = BPSANet(num_classes=num_classes)
+    model = resnet18(num_classes=num_classes)
 
     nparam = 0
     for n, m in model.named_modules():
         if isinstance(m, (nn.Conv2d)):
             if m.weight.size(2) > 1:
                 m.register_forward_hook(get_activation(n))
-                nparam += m.weight.numel()
+            nparam += m.weight.numel()
         elif isinstance(m, (nn.Linear)):
                 m.register_forward_hook(get_activation(n))
                 nparam += m.weight.numel()

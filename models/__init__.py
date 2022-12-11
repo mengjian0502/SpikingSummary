@@ -6,3 +6,4 @@ from .bpsa import BPSANet
 from .sewnet import SEWResNet
 from .dsr import vgg11_lif
 from .tet import TETNet
+from .resnet18 import resnet18
